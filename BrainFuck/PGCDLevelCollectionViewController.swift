@@ -14,12 +14,23 @@ class PGCDLevelCollectionViewController: UICollectionViewController {
 
     private let sauvegarde = NSUserDefaults()
     
+    private var endlessMod = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.title = "Trouver le PGCD"
+        self.title = "Le PGCD"
         
         self.collectionView?.backgroundColor = UIColor.whiteColor()
+        
+        let shadow = NSShadow()
+        shadow.shadowColor = UIColor(red:0.0, green:0.0, blue:0.0, alpha:0.8)
+        shadow.shadowOffset = CGSizeMake(0, 1)
+        
+        let buttonEndlessMod = UIBarButtonItem(title:"Endless", style:UIBarButtonItemStyle.Done, target:self, action:#selector(self.buttonEndlessModActionListener))
+        buttonEndlessMod.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor(red:245.0/255.0, green:245.0/255.0, blue:245.0/255.0, alpha:1.0), NSShadowAttributeName: shadow, NSFontAttributeName: UIFont(name:"HelveticaNeue-CondensedBlack", size:21.0)!], forState:UIControlState.Normal)
+        
+        self.navigationItem.rightBarButtonItem = buttonEndlessMod
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -33,6 +44,21 @@ class PGCDLevelCollectionViewController: UICollectionViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @objc private func buttonEndlessModActionListener()
+    {
+        self.endlessMod = !self.endlessMod
+        
+        let shadow = NSShadow()
+        shadow.shadowColor = UIColor(red:0.0, green:0.0, blue:0.0, alpha:0.8)
+        shadow.shadowOffset = CGSizeMake(0, 1)
+        
+        self.navigationItem.rightBarButtonItem!.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor(red:245.0/255.0, green:245.0/255.0, blue:245.0/255.0, alpha:1.0), NSShadowAttributeName: shadow, NSFontAttributeName: UIFont(name:"HelveticaNeue-CondensedBlack", size:21.0)!], forState:UIControlState.Normal)
+        if (self.endlessMod)
+        {
+            self.navigationItem.rightBarButtonItem!.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.greenColor(), NSShadowAttributeName: shadow, NSFontAttributeName: UIFont(name:"HelveticaNeue-CondensedBlack", size:21.0)!], forState:UIControlState.Normal)
+        }
     }
 
     private func getNumberOfItems() -> Int
@@ -88,6 +114,7 @@ class PGCDLevelCollectionViewController: UICollectionViewController {
         
         pgcdGameViewController.level = indexPath.row + 1
         pgcdGameViewController.pgcdLevelCollectionViewController = self
+        pgcdGameViewController.endlessMod = self.endlessMod
         
         self.navigationController?.pushViewController(pgcdGameViewController, animated:true)
     }

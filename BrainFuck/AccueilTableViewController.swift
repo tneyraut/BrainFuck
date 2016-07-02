@@ -10,9 +10,9 @@ import UIKit
 
 class AccueilTableViewController: UITableViewController {
     
-    private let menuArray: NSArray = ["Calcul mental", "Les couples", "Trouver le diviseur", "Trouver le nombre premier", "Trouver le PGCD", "Trouver le PPCM", "Numbers the game", "What is the color ?"]
+    private let menuArray: NSArray = ["Calcul mental", "Les couples", "Trouver le diviseur", "Trouver le nombre premier", "Trouver le PGCD", "Trouver le PPCM", "What is the color ?"]//"Numbers the game"
     
-    private let imageArray: NSArray = [NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:"")]
+    private let imageArray: NSArray = [NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:""), NSLocalizedString("ICON_CALCUL_MENTAL", comment:"")]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,16 +121,16 @@ class AccueilTableViewController: UITableViewController {
         }
         else if (indexPath.row == 6)
         {
-            let numbersScoresTableViewController = NumbersScoresTableViewController(style:.Plain)
-            
-            self.navigationController?.pushViewController(numbersScoresTableViewController, animated:true)
-        }
-        else if (indexPath.row == 7)
-        {
             let colorScoresTableViewController = ColorScoresTableViewController(style:.Plain)
             
             self.navigationController?.pushViewController(colorScoresTableViewController, animated:true)
         }
+        /*else if (indexPath.row == 7)
+        {
+            let numbersScoresTableViewController = NumbersScoresTableViewController(style:.Plain)
+            
+            self.navigationController?.pushViewController(numbersScoresTableViewController, animated:true)
+        }*/
     }
     
 }

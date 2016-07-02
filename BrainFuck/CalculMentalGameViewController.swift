@@ -15,6 +15,8 @@ class CalculMentalGameViewController: UIViewController {
     
     internal var calculMentalLevelCollectionViewController = CalculMentalLevelCollectionViewController()
     
+    internal var endlessMod = false
+    
     private var paveNumeriqueCollectionViewController = PaveNumeriqueCollectionViewController(collectionViewLayout:UICollectionViewFlowLayout())
     
     private let questionTextView = UITextView()
@@ -130,19 +132,32 @@ class CalculMentalGameViewController: UIViewController {
     
     @objc private func validateButtonActionListener()
     {
-        if (Int(self.reponseLabel.text!)! == self.resultat)
+        if (self.reponseLabel.text == "")
+        {
+            return
+        }
+        self.timer.invalidate()
+        if (self.reponseLabel.text != "" && Int(self.reponseLabel.text!)! == self.resultat)
         {
             self.objectif -= 1
             if (self.objectif == 0)
             {
-                self.timer.invalidate()
-                let alertController = UIAlertController(title:"Level Completed", message:"Félicitation, vous avez fini le niveau N°" + String(self.level) + ".", preferredStyle:.Alert)
-                let alertAction = UIAlertAction(title:"OK", style:.Default) { (_) in self.navigationController?.popViewControllerAnimated(true) }
-                alertController.addAction(alertAction)
-                
                 self.calculMentalLevelCollectionViewController.levelCompleted(self.level)
-                
-                presentViewController(alertController, animated:true, completion:nil)
+                if (!self.endlessMod)
+                {
+                    let alertController = UIAlertController(title:"Level Completed", message:"Félicitation, vous avez fini le niveau N°" + String(self.level) + ".", preferredStyle:.Alert)
+                    let alertAction = UIAlertAction(title:"OK", style:.Default) { (_) in
+                        self.timer.invalidate()
+                        self.navigationController?.popViewControllerAnimated(true)
+                    }
+                    alertController.addAction(alertAction)
+                    
+                    presentViewController(alertController, animated:true, completion:nil)
+                }
+                else
+                {
+                    self.setQuestion()
+                }
             }
             else
             {
@@ -168,11 +183,20 @@ class CalculMentalGameViewController: UIViewController {
         self.timer.invalidate()
         self.reponseLabel.text = ""
         
+        var timeBonus = 0
+        
         let number = self.getRandomNumber()
+        if (number > 10)
+        {
+            timeBonus += 1
+        }
         var question = String(number)
         self.resultat = number
         
-        var nombreOperations = arc4random_uniform(UInt32(self.getNombreMaxOperations())) + 1
+        var nombreOperations = Int(arc4random_uniform(UInt32(self.getNombreMaxOperations()))) + 1
+        
+        timeBonus += nombreOperations - 1
+        
         while (nombreOperations > 0)
         {
             var number = self.getRandomNumber()
@@ -184,13 +208,17 @@ class CalculMentalGameViewController: UIViewController {
                     number = self.getRandomNumber()
                 }
             }
+            if (number > 10)
+            {
+                timeBonus += 1
+            }
             question = "( " + question + " " + operation + " " + String(number) + " )"
             self.calculResultat(number, operation:operation)
             nombreOperations -= 1;
         }
         self.questionTextView.text = question + " = ?"
         
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(Double(self.getTempsImparti()), target:self, selector:#selector(self.wrongAnswer), userInfo:nil, repeats:true)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(Double(self.getTempsImparti(timeBonus)), target:self, selector:#selector(self.wrongAnswer), userInfo:nil, repeats:true)
     }
     
     @objc private func wrongAnswer()
@@ -200,8 +228,16 @@ class CalculMentalGameViewController: UIViewController {
         self.vie -= 1
         if (self.vie < 0)
         {
-            let alertController = UIAlertController(title:"Défaite", message:"Vous avez fait plus de trois fautes !", preferredStyle:.Alert)
-            let alertAction = UIAlertAction(title:"OK", style:.Default) { (_) in self.navigationController?.popViewControllerAnimated(true) }
+            var message = "Vous avez fait plus de trois fautes !"
+            if (self.endlessMod)
+            {
+                message = message + " Vous avez répondu correctement à " + String(self.getObjectif() - self.objectif) + " questions."
+            }
+            let alertController = UIAlertController(title:"Défaite", message:message, preferredStyle:.Alert)
+            let alertAction = UIAlertAction(title:"OK", style:.Default) { (_) in
+                self.timer.invalidate()
+                self.navigationController?.popViewControllerAnimated(true)
+            }
             alertController.addAction(alertAction)
             
             presentViewController(alertController, animated:true, completion:nil)
@@ -285,10 +321,10 @@ class CalculMentalGameViewController: UIViewController {
         }
     }
     
-    private func getTempsImparti() ->Int
+    private func getTempsImparti(timeBonus: Int) ->Int
     {
         // A modifier un jour...
-        return 5
+        return 5 + timeBonus
     }
     
     private func getObjectif() -> Int

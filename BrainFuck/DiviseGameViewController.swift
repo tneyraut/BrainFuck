@@ -15,6 +15,8 @@ class DiviseGameViewController: UIViewController {
     
     internal var diviseLevelCollectionViewController = DiviseLevelCollectionViewController()
     
+    internal var endlessMod = false
+    
     private let questionLabel = UILabel()
     
     private var choixMultiplesCollectionViewController = ChoixMultiplesCollectionViewController(collectionViewLayout:UICollectionViewFlowLayout())
@@ -129,13 +131,19 @@ class DiviseGameViewController: UIViewController {
         self.objectif -= 1
         if (self.objectif == 0)
         {
-            let alertController = UIAlertController(title:"Level Completed", message:"Félicitation, vous avez fini le niveau N°" + String(self.level) + ".", preferredStyle:.Alert)
-            let alertAction = UIAlertAction(title:"OK", style:.Default) { (_) in self.navigationController?.popViewControllerAnimated(true) }
-            alertController.addAction(alertAction)
-            
             self.diviseLevelCollectionViewController.levelCompleted(self.level)
-            
-            presentViewController(alertController, animated:true, completion:nil)
+            if (!self.endlessMod)
+            {
+                let alertController = UIAlertController(title:"Level Completed", message:"Félicitation, vous avez fini le niveau N°" + String(self.level) + ".", preferredStyle:.Alert)
+                let alertAction = UIAlertAction(title:"OK", style:.Default) { (_) in self.navigationController?.popViewControllerAnimated(true) }
+                alertController.addAction(alertAction)
+                
+                presentViewController(alertController, animated:true, completion:nil)
+            }
+            else
+            {
+                self.setQuestion()
+            }
         }
         else
         {
@@ -150,7 +158,12 @@ class DiviseGameViewController: UIViewController {
         self.vie -= 1
         if (self.vie < 0)
         {
-            let alertController = UIAlertController(title:"Défaite", message:"Vous avez fait plus de trois fautes !", preferredStyle:.Alert)
+            var message = "Vous avez fait plus de trois fautes !"
+            if (self.endlessMod)
+            {
+                message = message + " Vous avez répondu correctement à " + String(self.getObjectif() - self.objectif) + " questions."
+            }
+            let alertController = UIAlertController(title:"Défaite", message:message, preferredStyle:.Alert)
             let alertAction = UIAlertAction(title:"OK", style:.Default) { (_) in self.navigationController?.popViewControllerAnimated(true) }
             alertController.addAction(alertAction)
             

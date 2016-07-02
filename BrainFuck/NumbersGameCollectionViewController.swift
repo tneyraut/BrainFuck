@@ -237,7 +237,7 @@ class NumbersGameCollectionViewController: UICollectionViewController {
             
             self.numbersScoresTableViewController.gameFinish(self.score)
             
-            presentViewController(alertController, animated:true, completion:nil)
+            self.presentViewController(alertController, animated:true, completion:nil)
         }
     }
     
