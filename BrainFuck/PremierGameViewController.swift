@@ -159,6 +159,7 @@ class PremierGameViewController: UIViewController {
             if (self.endlessMod)
             {
                 message = message + " Vous avez répondu correctement à " + String(self.getObjectif() - self.objectif) + " questions."
+                self.premierLevelCollectionViewController.saveScore(self.getObjectif() - self.objectif, identifier:"PremierLevelN°" + String(self.level))
             }
             let alertController = UIAlertController(title:"Défaite", message:message, preferredStyle:.Alert)
             let alertAction = UIAlertAction(title:"OK", style:.Default) { (_) in self.navigationController?.popViewControllerAnimated(true) }

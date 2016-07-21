@@ -36,6 +36,7 @@
 		E8B0BFAA1D12FF9B009C59C8 /* PaveNumeriqueCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B0BFA91D12FF9B009C59C8 /* PaveNumeriqueCollectionViewController.swift */; };
 		E8BB8E0E1D184A6B00C5FABB /* ColorScoresTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BB8E0D1D184A6B00C5FABB /* ColorScoresTableViewController.swift */; };
 		E8BB8E101D184B8900C5FABB /* ColorGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BB8E0F1D184B8900C5FABB /* ColorGameViewController.swift */; };
+		E8EBEA351D3E268F00AA8EAC /* ScoreTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EBEA341D3E268F00AA8EAC /* ScoreTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 		E8B0BFA91D12FF9B009C59C8 /* PaveNumeriqueCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaveNumeriqueCollectionViewController.swift; sourceTree = "<group>"; };
 		E8BB8E0D1D184A6B00C5FABB /* ColorScoresTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorScoresTableViewController.swift; sourceTree = "<group>"; };
 		E8BB8E0F1D184B8900C5FABB /* ColorGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorGameViewController.swift; sourceTree = "<group>"; };
+		E8EBEA341D3E268F00AA8EAC /* ScoreTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +163,7 @@
 				E86797B41D170F2100C83708 /* NumbersGameCollectionViewController.swift */,
 				E8BB8E0D1D184A6B00C5FABB /* ColorScoresTableViewController.swift */,
 				E8BB8E0F1D184B8900C5FABB /* ColorGameViewController.swift */,
+				E8EBEA341D3E268F00AA8EAC /* ScoreTableViewController.swift */,
 				E8B0BFA51D12FB75009C59C8 /* CollectionViewCellWithLabel.swift */,
 				E8B0BF9F1D12F540009C59C8 /* TableViewCellWithImage.swift */,
 				E8B0BFA11D12F5F1009C59C8 /* Localizable.strings */,
@@ -343,6 +346,7 @@
 				E87CCD221D15C1BF0095A363 /* DiviseLevelCollectionViewController.swift in Sources */,
 				E8B0BFA01D12F540009C59C8 /* TableViewCellWithImage.swift in Sources */,
 				E8B0BF6D1D12F41E009C59C8 /* AppDelegate.swift in Sources */,
+				E8EBEA351D3E268F00AA8EAC /* ScoreTableViewController.swift in Sources */,
 				E847E18A1D15A00D00D4446A /* LesCouplesGameCollectionViewController.swift in Sources */,
 				E8B0BF751D12F41E009C59C8 /* BrainFuck.xcdatamodeld in Sources */,
 				E8B0BFA61D12FB75009C59C8 /* CollectionViewCellWithLabel.swift in Sources */,

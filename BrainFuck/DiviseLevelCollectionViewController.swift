@@ -30,6 +30,11 @@ class DiviseLevelCollectionViewController: UICollectionViewController {
         
         self.navigationItem.rightBarButtonItem = buttonEndlessMod
         
+        let buttonPrevious = UIBarButtonItem(title:"Retour", style:UIBarButtonItemStyle.Done, target:nil, action:nil)
+        buttonPrevious.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor(red:245.0/255.0, green:245.0/255.0, blue:245.0/255.0, alpha:1.0), NSShadowAttributeName: shadow, NSFontAttributeName: UIFont(name:"HelveticaNeue-CondensedBlack", size:21.0)!], forState:UIControlState.Normal)
+        
+        self.navigationItem.backBarButtonItem = buttonPrevious
+        
         self.collectionView?.backgroundColor = UIColor.whiteColor()
         
         // Uncomment the following line to preserve selection between presentations
@@ -75,6 +80,54 @@ class DiviseLevelCollectionViewController: UICollectionViewController {
         }
     }
     
+    internal func saveScore(score: Int, identifier: String)
+    {
+        if (score == 0)
+        {
+            return
+        }
+        if (self.sauvegarde.integerForKey("numberOfScoresFor" + identifier) < 10)
+        {
+            self.sauvegarde.setInteger(self.sauvegarde.integerForKey("numberOfScoresFor" + identifier) + 1, forKey:"numberOfScoresFor" + identifier)
+        }
+        if (self.sauvegarde.integerForKey("numberOfScoresFor" + identifier) == 1)
+        {
+            self.sauvegarde.setInteger(score, forKey:"scoreN°0" + identifier)
+        }
+        else
+        {
+            var i = 0
+            while (i < self.getNumberOfItems())
+            {
+                if (self.sauvegarde.integerForKey("scoreN°" + String(i) + identifier) < score)
+                {
+                    self.sauvegarde.setInteger(self.sauvegarde.integerForKey("scoreN°" + String(self.getNumberOfItems() - 2) + identifier), forKey:"scoreN°" + String(self.getNumberOfItems() - 1) + identifier)
+                    var j = self.getNumberOfItems() - 2
+                    while (j > i)
+                    {
+                        self.sauvegarde.setInteger(self.sauvegarde.integerForKey("scoreN°" + String(j - 1) + identifier), forKey:"scoreN°" + String(j) + identifier)
+                        j -= 1
+                    }
+                    self.sauvegarde.setInteger(score, forKey:"scoreN°" + String(i) + identifier)
+                    break
+                }
+                i += 1
+            }
+        }
+        self.sauvegarde.synchronize()
+    }
+    
+    private func goToGameViewWithLevel(level: Int)
+    {
+        let diviseGameViewController = DiviseGameViewController()
+        
+        diviseGameViewController.level = level
+        diviseGameViewController.diviseLevelCollectionViewController = self
+        diviseGameViewController.endlessMod = self.endlessMod
+        
+        self.navigationController?.pushViewController(diviseGameViewController, animated:true)
+    }
+    
     // MARK: UICollectionViewDataSource
 
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -110,13 +163,37 @@ class DiviseLevelCollectionViewController: UICollectionViewController {
     }
     
     override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let diviseGameViewController = DiviseGameViewController()
-        
-        diviseGameViewController.level = indexPath.row + 1
-        diviseGameViewController.diviseLevelCollectionViewController = self
-        diviseGameViewController.endlessMod = self.endlessMod
-        
-        self.navigationController?.pushViewController(diviseGameViewController, animated:true)
+        if (self.endlessMod)
+        {
+            let alertController = UIAlertController(title:"Level" + String(indexPath.row + 1), message:"Sélectionnez l'action souhaitée", preferredStyle:.ActionSheet)
+            
+            let alertActionPlay = UIAlertAction(title:"Play", style:.Default) { (_) in
+                self.goToGameViewWithLevel(indexPath.row + 1)
+            }
+            
+            let alertActionScore = UIAlertAction(title:"Scores", style:.Default) { (_) in
+                let scoreTableViewController = ScoreTableViewController(style:.Plain)
+                
+                scoreTableViewController.sauvegarde = self.sauvegarde
+                
+                scoreTableViewController.identifier = "DiviseLevelN°" + String(indexPath.row + 1)
+                
+                scoreTableViewController.theTitle = "Le Diviseur : Scores"
+                
+                self.navigationController?.pushViewController(scoreTableViewController, animated:true)
+            }
+            
+            let alertActionCancel = UIAlertAction(title:"Cancel", style:.Destructive) { (_) in }
+            
+            alertController.addAction(alertActionPlay)
+            alertController.addAction(alertActionScore)
+            alertController.addAction(alertActionCancel)
+            
+            self.presentViewController(alertController, animated:true, completion:nil)
+            
+            return
+        }
+        self.goToGameViewWithLevel(indexPath.row + 1)
     }
 
 }

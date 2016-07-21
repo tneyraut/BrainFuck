@@ -100,13 +100,8 @@ class ColorGameViewController: UIViewController {
         self.responseTwoButton.layer.masksToBounds = false
         
         self.view.addSubview(enonceLabel)
-        self.view.addSubview(self.questionLabel)
-        self.view.addSubview(self.responseOneButton)
-        self.view.addSubview(self.responseTwoButton)
         
         self.score = 0
-        
-        self.setQuestion()
         
         // Do any additional setup after loading the view.
     }
@@ -114,6 +109,25 @@ class ColorGameViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        self.navigationController?.setToolbarHidden(true, animated:true)
+        
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(1.5, target:self, selector:#selector(self.wait), userInfo:nil, repeats:true)
+        
+        super.viewDidAppear(animated)
+    }
+    
+    @objc private func wait()
+    {
+        self.timer.invalidate()
+        
+        self.view.addSubview(self.questionLabel)
+        self.view.addSubview(self.responseOneButton)
+        self.view.addSubview(self.responseTwoButton)
+        
+        self.setQuestion()
     }
     
     @objc private func responseButtonActionListener(sender: UIButton)
@@ -172,7 +186,7 @@ class ColorGameViewController: UIViewController {
         self.responseOneButton.setTitleColor(self.getRandomColor(), forState:UIControlState.Normal)
         self.responseTwoButton.setTitleColor(self.getRandomColor(), forState:UIControlState.Normal)
         
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(1.5, target:self, selector:#selector(self.time), userInfo:nil, repeats:true)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target:self, selector:#selector(self.time), userInfo:nil, repeats:true)
     }
     
     private func getRandomColor() -> UIColor

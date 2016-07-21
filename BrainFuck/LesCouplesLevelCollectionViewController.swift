@@ -21,6 +21,15 @@ class LesCouplesLevelCollectionViewController: UICollectionViewController {
         
         self.collectionView?.backgroundColor = UIColor.whiteColor()
         
+        let shadow = NSShadow()
+        shadow.shadowColor = UIColor(red:0.0, green:0.0, blue:0.0, alpha:0.8)
+        shadow.shadowOffset = CGSizeMake(0, 1)
+        
+        let buttonPrevious = UIBarButtonItem(title:"Retour", style:UIBarButtonItemStyle.Done, target:nil, action:nil)
+        buttonPrevious.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor(red:245.0/255.0, green:245.0/255.0, blue:245.0/255.0, alpha:1.0), NSShadowAttributeName: shadow, NSFontAttributeName: UIFont(name:"HelveticaNeue-CondensedBlack", size:21.0)!], forState:UIControlState.Normal)
+        
+        self.navigationItem.backBarButtonItem = buttonPrevious
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -47,6 +56,43 @@ class LesCouplesLevelCollectionViewController: UICollectionViewController {
             self.sauvegarde.setInteger(level, forKey:"LesCouplesNumberOfLevelCompleted");
             self.collectionView?.reloadData()
         }
+    }
+    
+    internal func saveScore(score: Int, identifier: String)
+    {
+        if (score == 0)
+        {
+            return
+        }
+        if (self.sauvegarde.integerForKey("numberOfScoresFor" + identifier) < 10)
+        {
+            self.sauvegarde.setInteger(self.sauvegarde.integerForKey("numberOfScoresFor" + identifier) + 1, forKey:"numberOfScoresFor" + identifier)
+        }
+        if (self.sauvegarde.integerForKey("numberOfScoresFor" + identifier) == 1)
+        {
+            self.sauvegarde.setInteger(score, forKey:"scoreN°0" + identifier)
+        }
+        else
+        {
+            var i = 0
+            while (i < self.getNumberOfItems())
+            {
+                if (self.sauvegarde.integerForKey("scoreN°" + String(i) + identifier) < score)
+                {
+                    self.sauvegarde.setInteger(self.sauvegarde.integerForKey("scoreN°" + String(self.getNumberOfItems() - 2) + identifier), forKey:"scoreN°" + String(self.getNumberOfItems() - 1) + identifier)
+                    var j = self.getNumberOfItems() - 2
+                    while (j > i)
+                    {
+                        self.sauvegarde.setInteger(self.sauvegarde.integerForKey("scoreN°" + String(j - 1) + identifier), forKey:"scoreN°" + String(j) + identifier)
+                        j -= 1
+                    }
+                    self.sauvegarde.setInteger(score, forKey:"scoreN°" + String(i) + identifier)
+                    break
+                }
+                i += 1
+            }
+        }
+        self.sauvegarde.synchronize()
     }
 
     // MARK: UICollectionViewDataSource
@@ -85,16 +131,40 @@ class LesCouplesLevelCollectionViewController: UICollectionViewController {
     }
     
     override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
+        let alertController = UIAlertController(title:"Level" + String(indexPath.row + 1), message:"Sélectionnez l'action souhaitée", preferredStyle:.ActionSheet)
         
-        let lesCouplesGameCollectionViewController = LesCouplesGameCollectionViewController(collectionViewLayout:layout)
+        let alertActionPlay = UIAlertAction(title:"Play", style:.Default) { (_) in
+            let layout = UICollectionViewFlowLayout()
+            layout.minimumLineSpacing = 0
+            layout.minimumInteritemSpacing = 0
+            
+            let lesCouplesGameCollectionViewController = LesCouplesGameCollectionViewController(collectionViewLayout:layout)
+            
+            lesCouplesGameCollectionViewController.level = indexPath.row + 1
+            lesCouplesGameCollectionViewController.lesCouplesLevelCollectionViewController = self
+            
+            self.navigationController?.pushViewController(lesCouplesGameCollectionViewController, animated:true)
+        }
         
-        lesCouplesGameCollectionViewController.level = indexPath.row + 1
-        lesCouplesGameCollectionViewController.lesCouplesLevelCollectionViewController = self
+        let alertActionScore = UIAlertAction(title:"Scores", style:.Default) { (_) in
+            let scoreTableViewController = ScoreTableViewController(style:.Plain)
+            
+            scoreTableViewController.sauvegarde = self.sauvegarde
+            
+            scoreTableViewController.identifier = "LesCouplesLevelN°" + String(indexPath.row + 1)
+            
+            scoreTableViewController.theTitle = "Les Couples : Scores"
+            
+            self.navigationController?.pushViewController(scoreTableViewController, animated:true)
+        }
         
-        self.navigationController?.pushViewController(lesCouplesGameCollectionViewController, animated:true)
+        let alertActionCancel = UIAlertAction(title:"Cancel", style:.Destructive) { (_) in }
+        
+        alertController.addAction(alertActionPlay)
+        alertController.addAction(alertActionScore)
+        alertController.addAction(alertActionCancel)
+        
+        self.presentViewController(alertController, animated:true, completion:nil)
     }
 
 }

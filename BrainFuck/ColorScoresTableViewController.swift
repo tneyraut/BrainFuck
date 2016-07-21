@@ -80,7 +80,10 @@ class ColorScoresTableViewController: UITableViewController {
         {
             return
         }
-        self.sauvegarde.setInteger(self.sauvegarde.integerForKey("ColorNumberOfScores") + 1, forKey:"ColorNumberOfScores")
+        if (self.sauvegarde.integerForKey("ColorNumberOfScores") < 10)
+        {
+            self.sauvegarde.setInteger(self.sauvegarde.integerForKey("ColorNumberOfScores") + 1, forKey:"ColorNumberOfScores")
+        }
         if (self.getNumberOfItems() == 1)
         {
             self.sauvegarde.setInteger(score, forKey:"ColorScore0")
@@ -105,6 +108,7 @@ class ColorScoresTableViewController: UITableViewController {
                 i += 1
             }
         }
+        self.sauvegarde.synchronize()
         self.tableView.reloadData()
     }
 

@@ -10,6 +10,8 @@ import UIKit
 
 private let reuseIdentifier = "Cell"
 
+// modifier temps écoule en double...
+
 class LesCouplesGameCollectionViewController: UICollectionViewController {
 
     internal var level = 0
@@ -199,7 +201,10 @@ class LesCouplesGameCollectionViewController: UICollectionViewController {
                         self.lesCouplesLevelCollectionViewController.levelCompleted(self.level)
                     }
                     let alertController = UIAlertController(title:title, message:message, preferredStyle:.Alert)
-                    let alertAction = UIAlertAction(title:"OK", style:.Default) { (_) in self.navigationController?.popViewControllerAnimated(true) }
+                    let alertAction = UIAlertAction(title:"OK", style:.Default) { (_) in
+                        self.lesCouplesLevelCollectionViewController.saveScore(self.tempsEcoule, identifier:"LesCouplesLevelN°" + String(self.level))
+                        self.navigationController?.popViewControllerAnimated(true)
+                    }
                     alertController.addAction(alertAction)
                     
                     presentViewController(alertController, animated:true, completion:nil)

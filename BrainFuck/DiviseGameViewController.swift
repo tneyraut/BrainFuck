@@ -162,6 +162,7 @@ class DiviseGameViewController: UIViewController {
             if (self.endlessMod)
             {
                 message = message + " Vous avez répondu correctement à " + String(self.getObjectif() - self.objectif) + " questions."
+                self.diviseLevelCollectionViewController.saveScore(self.getObjectif() - self.objectif, identifier:"DiviseLevelN°" + String(self.level))
             }
             let alertController = UIAlertController(title:"Défaite", message:message, preferredStyle:.Alert)
             let alertAction = UIAlertAction(title:"OK", style:.Default) { (_) in self.navigationController?.popViewControllerAnimated(true) }
